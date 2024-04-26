@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./database/db.ts";
 import teacherRouter from "./routes/teacher.routes.ts"
 import classRouter from "./routes/class.routes.ts";
+import studentRouter from "routes/student.routes.ts";
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -20,3 +21,4 @@ connectDB()
   });
 app.use(teacherRouter)
 app.use(classRouter)
+app.use(studentRouter)
