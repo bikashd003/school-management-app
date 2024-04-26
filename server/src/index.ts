@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./database/db.ts";
 import teacherRouter from "./routes/teacher.routes.ts"
+import classRouter from "./routes/class.routes.ts";
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -18,3 +19,4 @@ connectDB()
     console.log("DB connection failed", err);
   });
 app.use(teacherRouter)
+app.use(classRouter)
