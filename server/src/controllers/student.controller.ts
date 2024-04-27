@@ -4,15 +4,10 @@ import { Request, Response } from "express";
 export const createStudent = async (req: Request, res: Response) => {
     const { name, gender, DOB, contactDetails, feesPaid, classId } = req.body;
     try {
-      if (!name || !gender || !DOB || !contactDetails || feesPaid === undefined || !classId) {
+      if (!name || !gender || !DOB || !contactDetails || feesPaid === undefined ) {
         return res.status(400).json({ message: "All mandatory fields are required" });
       }
-  
-      const classExists = await Class.findById(classId);
-      if (!classExists) {
-        return res.status(404).json({ message: "Class not found" });
-      }
-  
+
       const newStudent = new Student({
         name,
         gender,
