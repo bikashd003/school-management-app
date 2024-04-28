@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   createStudent,
   getStudents,
-  getStudentById,
   updateStudent,
   deleteStudent,
 } from "../controllers/student.controller.ts";
@@ -15,8 +14,6 @@ studentRouter.route("/create-student").post(createStudent);
 // Route for fetching all students
 studentRouter.route("/get-students").get(getStudents);
 
-// Route for fetching a specific student by ID
-studentRouter.route("/get-student/:id").get(getStudentById);
 
 // Route for updating a specific student by ID
 studentRouter.route("/update-student/:id").put(updateStudent);

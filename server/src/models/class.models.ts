@@ -1,6 +1,6 @@
 import mongoose,{Schema } from "mongoose";
 const classSchema = new Schema({
-    name: {
+    className: {
       type: String,
       required: true,
     },
@@ -8,21 +8,20 @@ const classSchema = new Schema({
       type: Number, 
       required: true,
     },
-    teacher: {
+    teacherId: {
       type: Schema.Types.ObjectId,
       ref: "Teacher", 
-      required: true,
+      default:undefined
     },
     studentFees: {
       type: Number,
       required: true,
       min: 0, 
     },
-    studentList: [
+    studentListId: [
       {
         type: Schema.Types.ObjectId,
         ref: "Student", 
-        required: true,
       },
     ],
   });

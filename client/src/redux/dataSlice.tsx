@@ -9,13 +9,14 @@ interface Student {
   DOB: string;
   contactDetails: string;
   feesPaid: string;
-  class: string;
+  classId: string;
 }
 interface DataState {
   classes: any[]; 
   teachers: any[]; 
   students: Student[];
   edit: boolean;
+  id: string;
 }
 
 const initialState:DataState = {
@@ -23,6 +24,7 @@ const initialState:DataState = {
   teachers: [],
   students: [],
   edit:false,
+  id :""
 };
 const dataSlice = createSlice({
   name: "data",
@@ -39,10 +41,13 @@ const dataSlice = createSlice({
     },
     setEdit:(state,action)=>{
       state.edit=action.payload
+    },
+    setId:(state, action)=>{
+      state.id=action.payload
     }
   },
 });
-export const { setClasses, setTeachers, setStudents,setEdit } = dataSlice.actions;
+export const { setClasses, setTeachers, setStudents,setEdit,setId } = dataSlice.actions;
 
 export const getClasses=()=> async (dispatch: AppDispatch) => {
   try {
@@ -52,7 +57,7 @@ export const getClasses=()=> async (dispatch: AppDispatch) => {
     console.log(error);
   }
 };
-export const getTeachers = async (dispatch: AppDispatch) => {
+export const getTeachers =()=> async (dispatch: AppDispatch) => {
   try {
     const res = await axios.get(`${API}/get-teachers`);
     dispatch(setTeachers(res.data));
@@ -76,9 +81,9 @@ export const createStudent=async(data:any)=>{
     console.log(error);
   }
 }
-export const updateStudent=async(data:any)=>{
+export const updateStudent=async(data:any,id:string)=>{
   try {
-    const res = await axios.put(`${API}/update-student`, data);
+    const res = await axios.put(`${API}/update-student/${id}`, data);
     return res.data
   } catch (error) {
     console.log(error);
@@ -100,9 +105,9 @@ export const createTeacher=async(data:any)=>{
     console.log(error);
   }
 }
-export const updateTeacher=async(data:any)=>{
+export const updateTeacher=async(data:any,id:string)=>{
   try {
-    const res = await axios.put(`${API}/update-teacher`, data);
+    const res = await axios.put(`${API}/update-teacher/${id}`, data);
     return res.data
   } catch (error) {
     console.log(error);
@@ -124,9 +129,9 @@ export const createClass=async(data:any)=>{
     console.log(error);
   }
 }
-export const updateClass=async(data:any)=>{
+export const updateClass=async(data:any,id:string)=>{
   try {
-    const res = await axios.put(`${API}/update-class`, data);
+    const res = await axios.put(`${API}/update-class/${id}`, data);
     return res.data
   } catch (error) {
     console.log(error);

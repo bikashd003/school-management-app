@@ -4,7 +4,8 @@ import {
   getStudents,
   createStudent,
   deleteStudent,
-  setEdit,
+  setEdit,setId,
+  updateStudent,
 } from "../redux/dataSlice";
 import { studentSchema } from "../Schemas/StudentSchema";
 import Form from "../components/Form";
@@ -17,12 +18,12 @@ interface studentForm {
   DOB: string;
   contactDetails: string;
   feesPaid: string;
-  class: string;
+  classId: string;
 }
 
 const StudentManager: React.FC = () => {
   const dispatch = useDispatch();
-  const { students, edit } = useSelector((state: RootState) => state.data);
+  const { students, edit,id } = useSelector((state: RootState) => state.data);
   const [preFormValue, setPreFormValue] = useState<studentForm | null>(null);
 
   const defaultValues: studentForm = {
@@ -31,24 +32,29 @@ const StudentManager: React.FC = () => {
     DOB: "",
     contactDetails: "",
     feesPaid: "",
-    class: "",
+    classId: "",
   };
 
   const handleSubmit = (values: any) => {
-    createStudent(values);
+    if (!edit) {
+      createStudent(values);
+    } else if (edit) {
+      updateStudent(values,id);
+    }
   };
 
   const handleEdit = (studentId: string) => {
     const student = students.find((s) => s._id === studentId);
     if (student) {
       dispatch(setEdit(true));
+      dispatch(setId(studentId));
       setPreFormValue({
         name: student.name,
         gender: student.gender,
         DOB: moment(student.DOB).format("YYYY-MM-DD"),
         contactDetails: student.contactDetails,
         feesPaid: student.feesPaid,
-        class: student.class,
+        classId: student.classId,
       });
     }
   };
@@ -84,7 +90,7 @@ const StudentManager: React.FC = () => {
         {students.length > 0 && (
           <Table
             tableHead={tableHead}
-            tableRow={students}
+           studentRow={students}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
           />
