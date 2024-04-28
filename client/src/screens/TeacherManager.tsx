@@ -58,7 +58,7 @@ const TeacherManager = () => {
   };
   useEffect(() => {
     dispatch(getTeachers() as any);
-  }, [dispatch]);
+  }, [handleDelete,handleSubmit]);
   const tableHead = [
     "Teacher Name",
     "Gender",

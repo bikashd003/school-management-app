@@ -4,6 +4,7 @@ import {
   getStudents,
   updateStudent,
   deleteStudent,
+  getStudentsByPage,
 } from "../controllers/student.controller.ts";
 
 const studentRouter = Router();
@@ -13,6 +14,9 @@ studentRouter.route("/create-student").post(createStudent);
 
 // Route for fetching all students
 studentRouter.route("/get-students").get(getStudents);
+
+// Route for fetching all students by page
+studentRouter.route("/get-students-by-page").get(getStudentsByPage);
 
 
 // Route for updating a specific student by ID

@@ -1,7 +1,14 @@
 import moment from "moment";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 const Table = ({ tableHead, studentRow,handleEdit,handleDelete,classRow,teacherRow }:any) => {
+  const nagivate=useNavigate()
+const handleViewList=(id:string)=>{
+  nagivate(`/student-list/${id}`)
+}
+
+
     return (
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left  text-gray-500 ">
@@ -30,7 +37,7 @@ const Table = ({ tableHead, studentRow,handleEdit,handleDelete,classRow,teacherR
                     <td className="px-6 py-4">{moment(row.DOB).format("DD-MM-YYYY")}</td>
                     <td className="px-6 py-4">{row.contactDetails}</td>
                     <td className="px-6 py-4">{row.feesPaid}</td>
-                    <td className="px-6 py-4">{row.classId.className}</td>
+                    <td className="px-6 py-4">{row.classId?row.classId.className:""}</td>
                     <td className="px-6 py-4 flex justify-end"> 
                       <CiEdit className="text-xl text-blue-500 cursor-pointer hover:text-blue-700" onClick={() => handleEdit(row._id)} />
                       <MdDelete className="text-xl text-red-500 cursor-pointer hover:text-red-700 ml-3" onClick={() => handleDelete(row._id)} />
@@ -49,6 +56,7 @@ const Table = ({ tableHead, studentRow,handleEdit,handleDelete,classRow,teacherR
                     <td className="px-6 py-4">{row.year}</td>
                     <td className="px-6 py-4">{row.teacherId? row.teacherId.teacherName:""}</td>
                     <td className="px-6 py-4">{row.studentFees}</td>
+                    <td className="px-6 py-4"><button onClick={()=>handleViewList(row._id)} className="underline text-blue-500">View List</button></td>
                     <td className="px-6 py-4 flex justify-start"> 
                       <CiEdit className="text-xl text-blue-500 cursor-pointer hover:text-blue-700" onClick={() => handleEdit(row._id)} />
                       <MdDelete className="text-xl text-red-500 cursor-pointer hover:text-red-700 ml-3" onClick={() => handleDelete(row._id)} />
@@ -68,7 +76,7 @@ const Table = ({ tableHead, studentRow,handleEdit,handleDelete,classRow,teacherR
                     <td className="px-6 py-4">{moment(row.DOB).format("DD-MM-YYYY")}</td>
                     <td className="px-6 py-4">{row.salary}</td>
                     <td className="px-6 py-4">{row.contactDetails}</td>
-                    <td className="px-6 py-4">{row.assignedClass.className}</td>
+                    <td className="px-6 py-4">{row.assignedClass? row.assignedClass.className :""}</td>
                     <td className="px-6 py-4 flex justify-start"> 
                       <CiEdit className="text-xl text-blue-500 cursor-pointer hover:text-blue-700" onClick={() => handleEdit(row._id)} />
                       <MdDelete className="text-xl text-red-500 cursor-pointer hover:text-red-700 ml-3" onClick={() => handleDelete(row._id)} />

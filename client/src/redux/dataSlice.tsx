@@ -11,12 +11,19 @@ interface Student {
   feesPaid: string;
   classId: string;
 }
+interface Piechart{
+    _id: any;
+  gender: string;
+  count: number;
+}
 interface DataState {
   classes: any[]; 
   teachers: any[]; 
   students: Student[];
   edit: boolean;
   id: string;
+  totalPages:number,
+  pieChartData: Piechart[];
 }
 
 const initialState:DataState = {
@@ -24,7 +31,9 @@ const initialState:DataState = {
   teachers: [],
   students: [],
   edit:false,
-  id :""
+  id :"",
+  totalPages:0,
+  pieChartData: [],
 };
 const dataSlice = createSlice({
   name: "data",
@@ -44,10 +53,17 @@ const dataSlice = createSlice({
     },
     setId:(state, action)=>{
       state.id=action.payload
+    },
+    setTotalPages:(state, action)=>{
+      state.totalPages=action.payload
+    },
+    setPieChartData: (state, action) => {
+      state.pieChartData = action.payload;
     }
+
   },
 });
-export const { setClasses, setTeachers, setStudents,setEdit,setId } = dataSlice.actions;
+export const { setClasses, setTeachers, setStudents,setEdit,setId,setTotalPages,setPieChartData } = dataSlice.actions;
 
 export const getClasses=()=> async (dispatch: AppDispatch) => {
   try {
@@ -73,9 +89,17 @@ export const getStudents=() => async (dispatch: AppDispatch) => {
     console.log(error);
   }
 };
+export const getStudentsByPage=(page:number,limit:number) => async (dispatch: AppDispatch) => {
+  try {
+    const res = await axios.get(`${API}/get-students-by-page?page=${page}&limit=${limit}`);
+    dispatch(setStudents(res.data.students));
+    dispatch(setTotalPages(res.data.totalPages))
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const createStudent=async(data:any)=>{
   try {
-    console.log(data)
     await axios.post(`${API}/create-student`,data);
   } catch (error) {
     console.log(error);
@@ -141,6 +165,22 @@ export const deleteClass=async(id:any)=>{
   try {
     const res = await axios.delete(`${API}/delete-class/${id}`);
     return res.data
+  } catch (error) {
+    console.log(error);
+  }
+}
+export const getClassById=(id:any)=>async(dispatch:AppDispatch)=>{
+  try {
+    const res = await axios.get(`${API}/get-class/${id}`);
+    dispatch(setClasses(res.data.studentListId));
+  } catch (error) {
+    console.log(error);
+  }
+}
+export const getPieChart=(id:string)=>async(dispatch:AppDispatch)=>{
+  try {
+    const res = await axios.get(`${API}/get-piechart/${id}`);
+    dispatch(setPieChartData(res.data));
   } catch (error) {
     console.log(error);
   }

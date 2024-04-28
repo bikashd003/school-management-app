@@ -65,7 +65,7 @@ const StudentManager: React.FC = () => {
 
   useEffect(() => {
     dispatch(getStudents() as any);
-  }, [dispatch]);
+  }, [handleDelete,handleSubmit]);
   const tableHead = [
     "Name",
     "Gender",

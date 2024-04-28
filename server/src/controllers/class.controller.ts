@@ -1,18 +1,30 @@
 import { Request, Response } from "express";
 import Class from "../models/class.models.ts";
+import Student from "../models/student.models.ts";
 export const getClasses = async (req: Request, res: Response) => {
   try {
     const classes = await Class.find()
       .populate("teacherId", "teacherName")
-      .populate('studentListId');
-      console.log(classes)
     res.status(200).json(classes);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching classes" });
   }
 };
-
+export const getClassById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const classById = await Class.findById(id)
+    .populate("studentListId");
+    if (!classById) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+    res.status(200).json(classById);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching class" });
+  }
+};
 
 export const createClass = async (req: Request, res: Response) => {
   const { className, year, teacher, studentFees, studentList } = req.body;
@@ -76,5 +88,41 @@ export const deleteClass = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error deleting class" });
+  }
+};
+
+export const getPieChartData = async (req: Request, res: Response) => {
+  const { id } = req.params; 
+  try {
+    const classData = await Class.findById(id).select("studentListId");
+
+    if (!classData) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+    const studentListId = classData.studentListId; 
+
+    const genderCount = await Student.aggregate([
+      {
+        $match: { _id: { $in: studentListId } } 
+      },
+      {
+        $group: {
+          _id: "$gender", 
+          count: { $sum: 1 } 
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          gender: "$_id",
+          count: 1
+        }
+      }
+    ]);
+
+    res.status(200).json(genderCount); 
+  } catch (error) {
+    console.error("Error fetching pie chart data:", error);
+    res.status(500).json({ message: "Error fetching pie chart data" });
   }
 };

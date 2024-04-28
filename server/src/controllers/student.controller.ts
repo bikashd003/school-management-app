@@ -45,6 +45,29 @@ export const getStudents = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error fetching students" });
   }
 };
+export const getStudentsByPage = async (req: Request, res: Response) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip =
+      (parseInt(page as string, 10) - 1) * parseInt(limit as string, 10);
+
+    const totalStudents = await Student.countDocuments();
+    const students = await Student.find()
+      .populate("classId", "className")
+      .skip(skip)
+      .limit(parseInt(limit as string, 10));
+
+    res.status(200).json({
+      students,
+      currentPage: parseInt(page as string, 10),
+      totalPages: Math.ceil(totalStudents / parseInt(limit as string, 10)),
+      totalStudents,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching students" });
+  }
+};
 
 export const updateStudent = async (req: Request, res: Response) => {
   const { id } = req.params;
